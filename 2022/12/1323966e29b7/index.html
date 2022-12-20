@@ -16,25 +16,25 @@
   <meta name="author" content="DouyuShinyruo">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1.Kubernetes与Docker的关系在第一次接触到K8s的时候，我以为这个技术和Docker有一定的关系，毕竟一个的logo是驮着集装箱的鲸鱼，而另一个是船的舵轮，都是在虚拟化技术的大海中乘波驶浪的实现方式。  不过在对K8s有更多的了解后，我认为这两者并不能放在一个维度上进行讨论，两者所面向和解决的问题并不相同。Docker是非常流行的Linux容器解决方案，这我们在之前的文章中已经有了">
+    <meta name="description" content="今天在工作中遇到一个需要配置DNS Server的问题，记录一下。 引言在配置DNS Server之前，我们要先了解，什么是DNS？我第一次接触DNS是在我家跨上了“信息高速路”之后的一天，那时候我还是一个小学生，一个周末我快乐地打开电脑准备进入4399小游戏来一把的时候，却发现无法连上互联网。我感到非常的意外，因为就在那时我还可以使用QQ和朋友们愉快地聊天。但是当时的我并不知道这个问题是什么原因">
 <meta property="og:type" content="article">
-<meta property="og:title" content="从Docker到OpenShift（二）">
-<meta property="og:url" content="https://douyushinyruo.github.io/shinyruotechtips/2022/12/3ed6afbd27f8/index.html">
+<meta property="og:title" content="如何配置一个DNS服务？">
+<meta property="og:url" content="https://douyushinyruo.github.io/shinyruotechtips/2022/12/1323966e29b7/index.html">
 <meta property="og:site_name" content="每天学点新东西">
-<meta property="og:description" content="1.Kubernetes与Docker的关系在第一次接触到K8s的时候，我以为这个技术和Docker有一定的关系，毕竟一个的logo是驮着集装箱的鲸鱼，而另一个是船的舵轮，都是在虚拟化技术的大海中乘波驶浪的实现方式。  不过在对K8s有更多的了解后，我认为这两者并不能放在一个维度上进行讨论，两者所面向和解决的问题并不相同。Docker是非常流行的Linux容器解决方案，这我们在之前的文章中已经有了">
+<meta property="og:description" content="今天在工作中遇到一个需要配置DNS Server的问题，记录一下。 引言在配置DNS Server之前，我们要先了解，什么是DNS？我第一次接触DNS是在我家跨上了“信息高速路”之后的一天，那时候我还是一个小学生，一个周末我快乐地打开电脑准备进入4399小游戏来一把的时候，却发现无法连上互联网。我感到非常的意外，因为就在那时我还可以使用QQ和朋友们愉快地聊天。但是当时的我并不知道这个问题是什么原因">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E4%BB%8EDocker%E5%88%B0OpenShift%EF%BC%88%E4%BA%8C%EF%BC%89/cac5432e5ba26a36ca6d41e9ad6f1ca8d0e0970c.png">
-<meta property="article:published_time" content="2022-12-19T14:23:44.000Z">
-<meta property="article:modified_time" content="2022-12-19T14:32:19.000Z">
+<meta property="og:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-20-21-32-00-image.png">
+<meta property="og:image" content="https://douyushinyruo.github.io/shinyruotechtips/2022/12/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-20-22-17-26-image.png">
+<meta property="article:published_time" content="2022-12-20T14:33:09.000Z">
+<meta property="article:modified_time" content="2022-12-20T14:34:42.000Z">
 <meta property="article:author" content="DouyuShinyruo">
-<meta property="article:tag" content="Docker">
-<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="-DNS -网络技术">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E4%BB%8EDocker%E5%88%B0OpenShift%EF%BC%88%E4%BA%8C%EF%BC%89/cac5432e5ba26a36ca6d41e9ad6f1ca8d0e0970c.png">
+<meta name="twitter:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-20-21-32-00-image.png">
   
   
   
-  <title>从Docker到OpenShift（二） - 每天学点新东西</title>
+  <title>如何配置一个DNS服务？ - 每天学点新东西</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="从Docker到OpenShift（二）"></span>
+            <span id="subtitle" data-typed-text="如何配置一个DNS服务？"></span>
           
         </div>
 
@@ -211,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-12-19 22:23" pubdate>
-          2022年12月19日 晚上
+        <time datetime="2022-12-20 22:33" pubdate>
+          2022年12月20日 晚上
         </time>
       </span>
     
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          1.7k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          18 分钟
+          14 分钟
         
       </span>
     
@@ -276,12 +276,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">从Docker到OpenShift（二）</h1>
+            <h1 style="display: none">如何配置一个DNS服务？</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年12月19日 晚上 10:32:19
+                    本文最后更新于：2022年12月20日 晚上 10:34:42
                   
                 
               </p>
@@ -289,35 +289,35 @@
             
               <div class="markdown-body">
                 
-                <h1 id="1-Kubernetes与Docker的关系"><a href="#1-Kubernetes与Docker的关系" class="headerlink" title="1.Kubernetes与Docker的关系"></a>1.Kubernetes与Docker的关系</h1><p>在第一次接触到K8s的时候，我以为这个技术和Docker有一定的关系，毕竟一个的logo是驮着集装箱的鲸鱼，而另一个是船的舵轮，都是在虚拟化技术的大海中乘波驶浪的实现方式。</p>
-<p><img src="/shinyruotechtips/imgs/%E4%BB%8EDocker%E5%88%B0OpenShift%EF%BC%88%E4%BA%8C%EF%BC%89/cac5432e5ba26a36ca6d41e9ad6f1ca8d0e0970c.png" srcset="/shinyruotechtips/img/loading.gif" lazyload></p>
-<p>不过在对K8s有更多的了解后，我认为这两者并不能放在一个维度上进行讨论，两者所面向和解决的问题并不相同。Docker是非常流行的Linux容器解决方案，这我们在之前的文章中已经有了一定的了解。而K8s是一个容器编排的解决方案，主要面向的是集群管理，K8s支持对接多种容器，Docker并不是K8s对容器的唯一选择，比如K8s还支持Apache开源的Mesos容器等等。只要容器实现了K8s容器运行时的接口约定，都可以被K8s调度。</p>
-<p>我认为某种意义上，是容器的大规模使用，引入了新的问题，从而催生了容器的编排技术，把许多Container抽象，对外部使用者来说，并不关心容器内部的应用是如何运行的，而是关注以下问题：</p>
-<ul>
-<li><p>如何部署、调度、管理容器中的应用？</p>
-</li>
-<li><p>如何在升级程序的时候不中断对外的服务？</p>
-</li>
-<li><p>容器里的程序是否是正常运行的？</p>
-</li>
-<li><p>如何方便地根据业务去调整容器里的应用？</p>
-</li>
-</ul>
-<p>其实Docker的公司也推出过他们的容器集群管理方案Docker Swarm，某种意义上是K8s的竞品，但是在IT行业的生产中并没有流行起来，究其原因可能有以下几点：</p>
-<ul>
-<li><p>该方案和Docker绑定的程度太深，Docker本身是非常优秀的container方案，但是Swarm本身的功能非常有限，而且在刚推出的时候并不成熟</p>
-</li>
-<li><p>Google在推出K8s的时候，已经是一个比较成熟的方案了，并且归功于谷歌在大规模集群管理上的经验，谷歌给出的解决方案是非常高屋建瓴并且实用的</p>
-</li>
-<li><p>IT行业的规则是赢者通吃，使用的越为广泛的方案会有更加成熟的社区和公司去推动建设。</p>
-</li>
-</ul>
-<p>虽然K8s的配置更为复杂，但是它同时提供了更为灵活的部署方案，K8s的自动管理生命周期、自动恢复、模块化的架构设计，都是在生产中更具有实用价值的。如果我们想要学习K8s，实际上并不一定要会Docker。学 K8s 更多是让开发的服务能运行在 K8s 集群上，依托 K8s 集群管理、调度的能力让服务变得更具鲁棒性、更便于调整。对于Docker，需要有一个概念上的认知，如果有需要，再去学习就可以了。</p>
-<h1 id="2-K8s的起源"><a href="#2-K8s的起源" class="headerlink" title="2.K8s的起源"></a>2.K8s的起源</h1><p>众所周知，K8s起源于Google的开源，不过K8s的前身，在Google内部真正使用的系统叫做Borg。据说Google在Linux内核还没有CGroup和容器的情况下，造出了同样的东西。也有传言说Google将Brog中的一些边缘技术通过Golang来实现，变成了Kubernetes。当然，Google的说法是K8s吸取了Borg的优秀理念，Google的开源可谓是“纯粹的奉献”。像Google这样的IT行业领头公司，有许多开发的项目，当然也有很多因为各种原因不再继续进行维护的项目，<a target="_blank" rel="noopener" href="https://killedbygoogle.com/">Google Graveyard - Killed by Google</a>这个网站记录了Google曾经开发，现在已经是Dead Project的项目。有趣的是，该网站的作者曾经被Google聘请，不过作者本人拒绝了。不得不说，通过开源建立生态，培养用户，吸引企业用户上Google云去获得非阉割版本的性能是很高明的商业策略，这就是巨头的玩法。</p>
-<p>K8s提供了什么？我认为K8s最重要的一点是能够做到把容器部署为服务，这也是IT行业一直说的XaaS（ CaaS、laaS、PaaS）。K8s提供了Pod、Service等机制，帮助用户构建跨多个容器的应用服务、跨集群调度、扩展这些容器，并长期持续管理这些容器的运行健康状况；除此之外，它还可以根据用户设定的策略来自动管理用户的服务。</p>
-<p>如果作为服务的使用者来看，我们关心的是什么？我认为主要是服务的质量与可靠性，也就是说要保持服务的高可用性，这也是2B的IT服务提供商最需要做到的事情。假设有一个服务通过Pod1运行在机器1上，这时候K8s探测到机器1有问题或者处于离线状态，那么K8s就会把这个Pod在另一台机器2上重新拉起，并继续提供对应的服务，看起来这样的方案非常的合理。然而，请思考这样一个问题：我们如何确定机器1确实没有在工作了？在这里我想引入一个电脑领域的假想实验：<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%B8%A4%E5%86%9B%E9%97%AE%E9%A2%98">Two Generals’ Problem</a>，只有当收到回复并且再次对回复的内容做出回应之后，我们才认为信息是可靠的。然而对于机器1来说，信息显然已经不能再传递，我们应该如何保证机器1上的Pod1没有继续对数据进行修改呢？在分布式集群系统中这是一个非常常见的需要进行处理的问题，这就是“脑裂”（split-brain）现象。我们需要保证新的数据服务启动后，确保旧的服务不在能对数据进行处理或者访问修改，从而保证数据的完整性，这个机制叫Fencing。怎么去解决这个问题，我想IT行业应该已经有许多成熟的方案，而我并不了解，也不是在这里我想要去探讨的问题。</p>
-<p>提到K8s，不得不提的就是“云原生”这个概念。</p>
-<p>TBD</p>
+                <p>今天在工作中遇到一个需要配置DNS Server的问题，记录一下。</p>
+<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在配置DNS Server之前，我们要先了解，什么是DNS？我第一次接触DNS是在我家跨上了“信息高速路”之后的一天，那时候我还是一个小学生，一个周末我快乐地打开电脑准备进入4399小游戏来一把的时候，却发现无法连上互联网。我感到非常的意外，因为就在那时我还可以使用QQ和朋友们愉快地聊天。但是当时的我并不知道这个问题是什么原因，也并不会修复，后来还是给运营商的维修师傅打电话才把这个问题修复好了。直到后来我才知道是因为DNS出了问题，而QQ是直接使用IP地址来连接服务器，所以即使DNS失效，QQ也可以正常使用。</p>
+<p>如果根据DNS的作用来说，DNS就是一个电话簿，在这个电话簿上记录了访问的网址对应的IP地址。对于DNS的产生和历史，此处不再赘述，我们只需要知道DNS协议运行在UDP协议上，使用端口号53。</p>
+<h1 id="DNS是怎么工作的？"><a href="#DNS是怎么工作的？" class="headerlink" title="DNS是怎么工作的？"></a>DNS是怎么工作的？</h1><p>DNS系统采用的是分布式的解析方案，整个DNS架构是一种层次树状结构，这个树状结构称为DNS域名空间，如下图所示：</p>
+<p><img src="/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-20-21-32-00-image.png" srcset="/shinyruotechtips/img/loading.gif" lazyload></p>
+<p><a target="_blank" rel="noopener" href="https://root-servers.org/">Root Server Technical Operations Association (root-servers.org)</a>如果有兴趣的话，在这个网站上可以查看所有根域服务器。</p>
+<p>主机名和域名结合构成了FQDN<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">Fully qualified domain name - Wikipedia</a>，比如<a target="_blank" rel="noopener" href="http://www.bing.com.就是一个fqdn./">www.bing.com.就是一个FQDN。</a></p>
+<blockquote>
+<p>注1：FQDN只能包含26个英文字母、“0-9”十个数字和“-”英文中的连接号，且开头和结尾不能含有这个连接号。中文域名包含两到十五个汉字之间的字词或词组。域名中不能包含空格及符号如？&#x2F;；：@#$%^~_&#x3D;+&amp;。等。</p>
+</blockquote>
+<blockquote>
+<p>注2: 每个域名的最后面有一个点号“.”表示根域名，实际使用的时候为了方便省略掉。</p>
+</blockquote>
+<p>如果想要理解DNS的工作原理，我们可以用Wireshark抓一个DNS请求包，并对它的内容进行分析。</p>
+<p><strong>TODO</strong></p>
+<p>整个DNS的域名解析过程是什么样的呢？</p>
+<h5 id="1-本地缓存"><a href="#1-本地缓存" class="headerlink" title="1.本地缓存"></a>1.本地缓存</h5><p>当我们在浏览器中输入一个域名的时候，首先会去浏览器的 dns 缓存中去查询是否有对应记录。如果查询到记录就可以直接返回 ip 地址，完成解析。同上，如果浏览器没有对应的缓存，就去查询操作系统的缓存。</p>
+<h5 id="2-hosts"><a href="#2-hosts" class="headerlink" title="2.hosts"></a>2.hosts</h5><p>当缓存中没有记录的时候，去检查本地的hosts(C:\Windows\System32\drivers\etc\hosts)文件是否有这个网址的映射关系.</p>
+<h5 id="3-本地DNS服务器"><a href="#3-本地DNS服务器" class="headerlink" title="3.本地DNS服务器"></a>3.本地DNS服务器</h5><p>一般来说，本地DNS一般本地的互联网运营商提供，由DHCP自动分配，当然也可以由使用者手动配置。</p>
+<img src="../imgs/如何配置一个DNS服务？/2022-12-20-22-17-26-image.png" srcset="/shinyruotechtips/img/loading.gif" lazyload title="" alt="" width="383">
+
+<p>当hosts没有对应映射时，查找本地DNS服务器缓存。如果该服务器已缓存了此网址映射关系，则调用这个IP地址映射，完成域名解析，此解析不具有权威性。如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。</p>
+<h5 id="4-根域名-x2F-上级服务器"><a href="#4-根域名-x2F-上级服务器" class="headerlink" title="4.根域名&#x2F;上级服务器"></a>4.根域名&#x2F;上级服务器</h5><p>这里根据本地DNS服务器是否设置了转发器，有两种情况。</p>
+<p><strong>未启用转发模式：</strong> 本地DNS把请求发至13台根DNS，根DNS服务器收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个IP。本地DNS服务器收到IP信息后，将会联系负责.com域的这台服务器。这台负责.com域的服务器收到请求后，如果自己无法解析，它就会找一个管理.com域的下一级DNS服务器地址(baidu.com)给本地DNS服务器，直到找到主机。</p>
+<p><strong>启用转发模式：</strong> 此DNS服务器就会把请求转发至上一级DNS服务器，由上一级服务器进行解析，上一级服务器如果不能解析，或找根DNS或把转请求转至上上级，以此循环。不管是本地DNS服务器用是是转发，还是根提示，最后都是把结果返回给本地DNS服务器，由此DNS服务器再返回给客户机。</p>
+<p>这就是DNS系统的作用：</p>
+<p>    正向解析：根据主机名称（域名）查找对应的IP地址</p>
+<p>    反向解析：根据IP地址查找对应的主机域名</p>
+<p><strong>TODO</strong> 配置DNS服务的实例</p>
 
                 
               </div>
@@ -330,9 +330,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/shinyruotechtips/tags/Docker/">#Docker</a>
-      
-        <a href="/shinyruotechtips/tags/Kubernetes/">#Kubernetes</a>
+        <a href="/shinyruotechtips/tags/DNS-%E7%BD%91%E7%BB%9C%E6%8A%80%E6%9C%AF/">#-DNS -网络技术</a>
       
     </div>
   
@@ -344,8 +342,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>从Docker到OpenShift（二）</div>
-      <div>https://douyushinyruo.github.io/shinyruotechtips/2022/12/3ed6afbd27f8/</div>
+      <div>如何配置一个DNS服务？</div>
+      <div>https://douyushinyruo.github.io/shinyruotechtips/2022/12/1323966e29b7/</div>
     </div>
     <div class="license-meta">
       
@@ -357,7 +355,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年12月19日</div>
+          <div>2022年12月20日</div>
         </div>
       
       
@@ -389,18 +387,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/shinyruotechtips/2022/12/1323966e29b7/" title="如何配置一个DNS服务？">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">如何配置一个DNS服务？</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/shinyruotechtips/2022/12/4757bbfdf288/" title="从Docker到OpenShift（一）">
-                        <span class="hidden-mobile">从Docker到OpenShift（一）</span>
+                      <a href="/shinyruotechtips/2022/12/3ed6afbd27f8/" title="从Docker到OpenShift（二）">
+                        <span class="hidden-mobile">从Docker到OpenShift（二）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -423,7 +415,7 @@
         var options = Object.assign(
           {"clientID":"7289cae2463ede906cd2","clientSecret":"84d68014e41df4e4404ac497ffe3d33cf37722fd","repo":"shinyruotechtips","owner":"DouyuShinyruo","admin":"DouyuShinyruo","language":"zh-CN || en","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '03affd8e42103434e8c869cd5d4d88fc'
+            id: '93ff8529d0dc28c998036907bc0d6278'
           }
         )
         var gitalk = new Gitalk(options);

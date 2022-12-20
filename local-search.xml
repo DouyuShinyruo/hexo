@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>如何配置一个DNS服务？</title>
+    <link href="/shinyruotechtips/2022/12/1323966e29b7/"/>
+    <url>/shinyruotechtips/2022/12/1323966e29b7/</url>
+    
+    <content type="html"><![CDATA[<p>今天在工作中遇到一个需要配置DNS Server的问题，记录一下。</p><h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在配置DNS Server之前，我们要先了解，什么是DNS？我第一次接触DNS是在我家跨上了“信息高速路”之后的一天，那时候我还是一个小学生，一个周末我快乐地打开电脑准备进入4399小游戏来一把的时候，却发现无法连上互联网。我感到非常的意外，因为就在那时我还可以使用QQ和朋友们愉快地聊天。但是当时的我并不知道这个问题是什么原因，也并不会修复，后来还是给运营商的维修师傅打电话才把这个问题修复好了。直到后来我才知道是因为DNS出了问题，而QQ是直接使用IP地址来连接服务器，所以即使DNS失效，QQ也可以正常使用。</p><p>如果根据DNS的作用来说，DNS就是一个电话簿，在这个电话簿上记录了访问的网址对应的IP地址。对于DNS的产生和历史，此处不再赘述，我们只需要知道DNS协议运行在UDP协议上，使用端口号53。</p><h1 id="DNS是怎么工作的？"><a href="#DNS是怎么工作的？" class="headerlink" title="DNS是怎么工作的？"></a>DNS是怎么工作的？</h1><p>DNS系统采用的是分布式的解析方案，整个DNS架构是一种层次树状结构，这个树状结构称为DNS域名空间，如下图所示：</p><p><img src="/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-20-21-32-00-image.png"></p><p><a href="https://root-servers.org/">Root Server Technical Operations Association (root-servers.org)</a>如果有兴趣的话，在这个网站上可以查看所有根域服务器。</p><p>主机名和域名结合构成了FQDN<a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">Fully qualified domain name - Wikipedia</a>，比如<a href="http://www.bing.com.就是一个fqdn./">www.bing.com.就是一个FQDN。</a></p><blockquote><p>注1：FQDN只能包含26个英文字母、“0-9”十个数字和“-”英文中的连接号，且开头和结尾不能含有这个连接号。中文域名包含两到十五个汉字之间的字词或词组。域名中不能包含空格及符号如？&#x2F;；：@#$%^~_&#x3D;+&amp;。等。</p></blockquote><blockquote><p>注2: 每个域名的最后面有一个点号“.”表示根域名，实际使用的时候为了方便省略掉。</p></blockquote><p>如果想要理解DNS的工作原理，我们可以用Wireshark抓一个DNS请求包，并对它的内容进行分析。</p><p><strong>TODO</strong></p><p>整个DNS的域名解析过程是什么样的呢？</p><h5 id="1-本地缓存"><a href="#1-本地缓存" class="headerlink" title="1.本地缓存"></a>1.本地缓存</h5><p>当我们在浏览器中输入一个域名的时候，首先会去浏览器的 dns 缓存中去查询是否有对应记录。如果查询到记录就可以直接返回 ip 地址，完成解析。同上，如果浏览器没有对应的缓存，就去查询操作系统的缓存。</p><h5 id="2-hosts"><a href="#2-hosts" class="headerlink" title="2.hosts"></a>2.hosts</h5><p>当缓存中没有记录的时候，去检查本地的hosts(C:\Windows\System32\drivers\etc\hosts)文件是否有这个网址的映射关系.</p><h5 id="3-本地DNS服务器"><a href="#3-本地DNS服务器" class="headerlink" title="3.本地DNS服务器"></a>3.本地DNS服务器</h5><p>一般来说，本地DNS一般本地的互联网运营商提供，由DHCP自动分配，当然也可以由使用者手动配置。</p><img src="../imgs/如何配置一个DNS服务？/2022-12-20-22-17-26-image.png" title="" alt="" width="383"><p>当hosts没有对应映射时，查找本地DNS服务器缓存。如果该服务器已缓存了此网址映射关系，则调用这个IP地址映射，完成域名解析，此解析不具有权威性。如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。</p><h5 id="4-根域名-x2F-上级服务器"><a href="#4-根域名-x2F-上级服务器" class="headerlink" title="4.根域名&#x2F;上级服务器"></a>4.根域名&#x2F;上级服务器</h5><p>这里根据本地DNS服务器是否设置了转发器，有两种情况。</p><p><strong>未启用转发模式：</strong> 本地DNS把请求发至13台根DNS，根DNS服务器收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个IP。本地DNS服务器收到IP信息后，将会联系负责.com域的这台服务器。这台负责.com域的服务器收到请求后，如果自己无法解析，它就会找一个管理.com域的下一级DNS服务器地址(baidu.com)给本地DNS服务器，直到找到主机。</p><p><strong>启用转发模式：</strong> 此DNS服务器就会把请求转发至上一级DNS服务器，由上一级服务器进行解析，上一级服务器如果不能解析，或找根DNS或把转请求转至上上级，以此循环。不管是本地DNS服务器用是是转发，还是根提示，最后都是把结果返回给本地DNS服务器，由此DNS服务器再返回给客户机。</p><p>这就是DNS系统的作用：</p><p>    正向解析：根据主机名称（域名）查找对应的IP地址</p><p>    反向解析：根据IP地址查找对应的主机域名</p><p><strong>TODO</strong> 配置DNS服务的实例</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>-DNS -网络技术</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>从Docker到OpenShift（二）</title>
     <link href="/shinyruotechtips/2022/12/3ed6afbd27f8/"/>
     <url>/shinyruotechtips/2022/12/3ed6afbd27f8/</url>
