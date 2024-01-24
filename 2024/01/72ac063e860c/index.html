@@ -16,27 +16,24 @@
   <meta name="author" content="DouyuShinyruo">
   <meta name="keywords" content="">
   
-    <meta name="description" content="今天在工作中遇到一个需要配置DNS Server的问题，记录一下。 引言在配置DNS Server之前，我们要先了解，什么是DNS？我第一次接触DNS是在我家跨上了“信息高速路”之后的一天，那时候我还是一个小学生，一个周末我快乐地打开电脑准备进入4399小游戏来一把的时候，却发现无法连上互联网。我感到非常的意外，因为就在那时我还可以使用QQ和朋友们愉快地聊天。但是当时的我并不知道这个问题是什么原因">
+    <meta name="description" content="科普一下北美科技公司对工程技术角色的区分，比如 EM(Engineering Manager)、TPM (Technical Program Manager) 都代表什么意思，分工有什么不同？ 通常北美的工程技术相关的职业分成以下五个类别：  开发工程师 SE &#x2F; SDE(Software Engineer &#x2F; Software Development Engineer) 工程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何配置一个DNS服务？">
-<meta property="og:url" content="https://douyushinyruo.github.io/shinyruotechtips/2022/12/1323966e29b7/index.html">
+<meta property="og:title" content="北美科技公司对工程技术角色的区分">
+<meta property="og:url" content="https://douyushinyruo.github.io/shinyruotechtips/2024/01/72ac063e860c/index.html">
 <meta property="og:site_name" content="每天学点新东西">
-<meta property="og:description" content="今天在工作中遇到一个需要配置DNS Server的问题，记录一下。 引言在配置DNS Server之前，我们要先了解，什么是DNS？我第一次接触DNS是在我家跨上了“信息高速路”之后的一天，那时候我还是一个小学生，一个周末我快乐地打开电脑准备进入4399小游戏来一把的时候，却发现无法连上互联网。我感到非常的意外，因为就在那时我还可以使用QQ和朋友们愉快地聊天。但是当时的我并不知道这个问题是什么原因">
+<meta property="og:description" content="科普一下北美科技公司对工程技术角色的区分，比如 EM(Engineering Manager)、TPM (Technical Program Manager) 都代表什么意思，分工有什么不同？ 通常北美的工程技术相关的职业分成以下五个类别：  开发工程师 SE &#x2F; SDE(Software Engineer &#x2F; Software Development Engineer) 工程">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-20-21-32-00-image.png">
-<meta property="og:image" content="https://douyushinyruo.github.io/shinyruotechtips/2022/12/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-20-22-17-26-image.png">
-<meta property="og:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-22-21-29-52-image.png">
-<meta property="og:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-22-21-37-03-image.png">
-<meta property="article:published_time" content="2022-12-20T14:33:09.000Z">
-<meta property="article:modified_time" content="2022-12-22T13:56:54.000Z">
+<meta property="og:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E5%8C%97%E7%BE%8E%E7%A7%91%E6%8A%80%E5%85%AC%E5%8F%B8%E5%AF%B9%E5%B7%A5%E7%A8%8B%E6%8A%80%E6%9C%AF%E8%A7%92%E8%89%B2%E7%9A%84%E5%8C%BA%E5%88%86/2024-01-23-16-27-27-image.png">
+<meta property="article:published_time" content="2024-01-22T13:32:35.000Z">
+<meta property="article:modified_time" content="2024-01-24T08:06:44.000Z">
 <meta property="article:author" content="DouyuShinyruo">
-<meta property="article:tag" content="-DNS -网络技术">
+<meta property="article:tag" content="ReadingList">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-20-21-32-00-image.png">
+<meta name="twitter:image" content="https://douyushinyruo.github.io/shinyruotechtips/imgs/%E5%8C%97%E7%BE%8E%E7%A7%91%E6%8A%80%E5%85%AC%E5%8F%B8%E5%AF%B9%E5%B7%A5%E7%A8%8B%E6%8A%80%E6%9C%AF%E8%A7%92%E8%89%B2%E7%9A%84%E5%8C%BA%E5%88%86/2024-01-23-16-27-27-image.png">
   
   
   
-  <title>如何配置一个DNS服务？ - 每天学点新东西</title>
+  <title>北美科技公司对工程技术角色的区分 - 每天学点新东西</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="如何配置一个DNS服务？"></span>
+            <span id="subtitle" data-typed-text="北美科技公司对工程技术角色的区分"></span>
           
         </div>
 
@@ -213,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-12-20 22:33" pubdate>
-          2022年12月20日 晚上
+        <time datetime="2024-01-22 21:32" pubdate>
+          2024年1月22日 晚上
         </time>
       </span>
     
@@ -225,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.3k 字
+          2.3k 字
         
       </span>
     
@@ -236,7 +233,7 @@
         
         
         
-          28 分钟
+          20 分钟
         
       </span>
     
@@ -278,12 +275,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">如何配置一个DNS服务？</h1>
+            <h1 style="display: none">北美科技公司对工程技术角色的区分</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年12月22日 晚上 09:56:54
+                    本文最后更新于：2024年1月24日 下午 04:06:44
                   
                 
               </p>
@@ -291,75 +288,75 @@
             
               <div class="markdown-body">
                 
-                <p>今天在工作中遇到一个需要配置DNS Server的问题，记录一下。</p>
-<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在配置DNS Server之前，我们要先了解，什么是DNS？我第一次接触DNS是在我家跨上了“信息高速路”之后的一天，那时候我还是一个小学生，一个周末我快乐地打开电脑准备进入4399小游戏来一把的时候，却发现无法连上互联网。我感到非常的意外，因为就在那时我还可以使用QQ和朋友们愉快地聊天。但是当时的我并不知道这个问题是什么原因，也并不会修复，后来还是给运营商的维修师傅打电话才把这个问题修复好了。直到后来我才知道是因为DNS出了问题，而QQ是直接使用IP地址来连接服务器，所以即使DNS失效，QQ也可以正常使用。</p>
-<p>如果根据DNS的作用来说，DNS就是一个电话簿，在这个电话簿上记录了访问的网址对应的IP地址。对于DNS的产生和历史，此处不再赘述，我们只需要知道DNS协议运行在UDP协议上，使用端口号53。</p>
-<h1 id="DNS是怎么工作的？"><a href="#DNS是怎么工作的？" class="headerlink" title="DNS是怎么工作的？"></a>DNS是怎么工作的？</h1><p>DNS系统采用的是分布式的解析方案，整个DNS架构是一种层次树状结构，这个树状结构称为DNS域名空间，如下图所示：</p>
-<p><img src="/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-20-21-32-00-image.png" srcset="/shinyruotechtips/img/loading.gif" lazyload></p>
-<p><a target="_blank" rel="noopener" href="https://root-servers.org/">Root Server Technical Operations Association (root-servers.org)</a>如果有兴趣的话，在这个网站上可以查看所有根域服务器。</p>
-<p>主机名和域名结合构成了FQDN<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">Fully qualified domain name - Wikipedia</a>，比如<a target="_blank" rel="noopener" href="http://www.bing.com.就是一个fqdn./">www.bing.com.就是一个FQDN。</a></p>
-<blockquote>
-<p>注1：FQDN只能包含26个英文字母、“0-9”十个数字和“-”英文中的连接号，且开头和结尾不能含有这个连接号。中文域名包含两到十五个汉字之间的字词或词组。域名中不能包含空格及符号如？&#x2F;；：@#$%^~_&#x3D;+&amp;。等。</p>
-</blockquote>
-<blockquote>
-<p>注2: 每个域名的最后面有一个点号“.”表示根域名，实际使用的时候为了方便省略掉。</p>
-</blockquote>
-<h1 id="DNS域名解析过程"><a href="#DNS域名解析过程" class="headerlink" title="DNS域名解析过程"></a>DNS域名解析过程</h1><p>整个DNS的域名解析过程是什么样的呢？</p>
-<h5 id="1-本地缓存"><a href="#1-本地缓存" class="headerlink" title="1.本地缓存"></a>1.本地缓存</h5><p>当我们在浏览器中输入一个域名的时候，首先会去浏览器的 dns 缓存中去查询是否有对应记录。如果查询到记录就可以直接返回 ip 地址，完成解析。同上，如果浏览器没有对应的缓存，就去查询操作系统的缓存。</p>
-<h5 id="2-hosts"><a href="#2-hosts" class="headerlink" title="2.hosts"></a>2.hosts</h5><p>当缓存中没有记录的时候，去检查本地的hosts(C:\Windows\System32\drivers\etc\hosts)文件是否有这个网址的映射关系.</p>
-<h5 id="3-本地DNS服务器"><a href="#3-本地DNS服务器" class="headerlink" title="3.本地DNS服务器"></a>3.本地DNS服务器</h5><p>一般来说，本地DNS一般本地的互联网运营商提供，由DHCP自动分配，当然也可以由使用者手动配置。</p>
-<img src="../imgs/如何配置一个DNS服务？/2022-12-20-22-17-26-image.png" srcset="/shinyruotechtips/img/loading.gif" lazyload title="" alt="" width="383">
-
-<p>当hosts没有对应映射时，查找本地DNS服务器缓存。如果该服务器已缓存了此网址映射关系，则调用这个IP地址映射，完成域名解析，此解析不具有权威性。如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。</p>
-<h5 id="4-根域名-x2F-上级服务器"><a href="#4-根域名-x2F-上级服务器" class="headerlink" title="4.根域名&#x2F;上级服务器"></a>4.根域名&#x2F;上级服务器</h5><p>这里根据本地DNS服务器是否设置了转发器，有两种情况。</p>
-<p><strong>未启用转发模式：</strong> 本地DNS把请求发至13台根DNS，根DNS服务器收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个IP。本地DNS服务器收到IP信息后，将会联系负责.com域的这台服务器。这台负责.com域的服务器收到请求后，如果自己无法解析，它就会找一个管理.com域的下一级DNS服务器地址(baidu.com)给本地DNS服务器，直到找到主机。</p>
-<p><strong>启用转发模式：</strong> 此DNS服务器就会把请求转发至上一级DNS服务器，由上一级服务器进行解析，上一级服务器如果不能解析，或找根DNS或把转请求转至上上级，以此循环。不管是本地DNS服务器用是是转发，还是根提示，最后都是把结果返回给本地DNS服务器，由此DNS服务器再返回给客户机。</p>
-<p>这就是DNS系统的作用：</p>
-<p>    正向解析：根据主机名称（域名）查找对应的IP地址</p>
-<p>    反向解析：根据IP地址查找对应的主机域名</p>
-<p>如果想要更深入地理解DNS的工作原理，我们可以用Wireshark抓一个DNS请求包，并对它的内容进行分析。</p>
-<p>以对<a href="http://www.biying.com的访问作为例子：">www.biying.com的访问作为例子：</a></p>
-<p><img src="/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-22-21-29-52-image.png" srcset="/shinyruotechtips/img/loading.gif" lazyload></p>
-<p>可以看到，访问<a target="_blank" rel="noopener" href="http://www.biying.com总共产生了四条数据,两次dns请求,第一次查询www.biying.com域名对应的ipv4地址,第二次查询www.biying.com域名对应的ipv6地址./">www.biying.com总共产生了四条数据，两次DNS请求，第一次查询www.biying.com域名对应的IPv4地址，第二次查询www.biying.com域名对应的IPv6地址。</a></p>
-<p><img src="/shinyruotechtips/imgs/%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AADNS%E6%9C%8D%E5%8A%A1%EF%BC%9F/2022-12-22-21-37-03-image.png" srcset="/shinyruotechtips/img/loading.gif" lazyload></p>
-<p><strong>报文分析</strong>：</p>
-<p>可以看到，网络传输层使用 UDP 协议，端口号为 53</p>
-<h4 id="DNS报文基础结构部分"><a href="#DNS报文基础结构部分" class="headerlink" title="DNS报文基础结构部分"></a><strong>DNS报文基础结构部分</strong></h4><p>每个字段含义如下。</p>
+                <p>科普一下北美科技公司对工程技术角色的区分，比如 EM(Engineering Manager)、TPM (Technical Program Manager) 都代表什么意思，分工有什么不同？</p>
+<p>通常北美的工程技术相关的职业分成以下五个类别：</p>
 <ul>
-<li>事务 ID（Transaction ID）：DNS 报文的 ID 标识。对于请求报文和其对应的应答报文，该字段的值是相同的。通过它可以区分 DNS 应答报文是对哪个请求进行响应的。</li>
-<li>标志（Flags）：DNS 报文中的标志字段。</li>
-<li>问题计数（Questions）：DNS 查询请求的数目。</li>
-<li>回答资源记录数（Answers RRs）：DNS 响应的数目。</li>
-<li>权威名称服务器计数（Authority RRs）：权威名称服务器的数目。</li>
-<li>附加资源记录数（Additional RRs）：额外的记录数目（权威名称服务器对应 IP 地址的数目）。</li>
+<li>开发工程师 SE &#x2F; SDE(Software Engineer &#x2F; Software Development Engineer)</li>
+<li>工程经理 EM &#x2F; SDM(Engineering Manager &#x2F; Software Development Manager)</li>
+<li>技术主管 TL &#x2F; TLM (Tech Lead &#x2F; Tech Lead Manager)</li>
+<li>技术项目经理 TPM (Technical Program Manager)</li>
+<li>产品经理 PM (Product Manager)</li>
 </ul>
-<p>   其中Flags字段中每个字段的含义如下：</p>
+<p>这些角色之间的差别很难描述，知名技术专栏 The Pragmatic Engineer 的作者，前 Uber 的工程经理 Gergely Orosz 写过一篇文章：《<a target="_blank" rel="noopener" href="https://newsletter.pragmaticengineer.com/p/engineering-leadership-skillset-overlaps">Engineering Leadership Skill Set Overlaps</a>》，从三个维度来区分这些角色之间的差别，相对比较准确客观。</p>
+<p><img src="/shinyruotechtips/imgs/%E5%8C%97%E7%BE%8E%E7%A7%91%E6%8A%80%E5%85%AC%E5%8F%B8%E5%AF%B9%E5%B7%A5%E7%A8%8B%E6%8A%80%E6%9C%AF%E8%A7%92%E8%89%B2%E7%9A%84%E5%8C%BA%E5%88%86/2024-01-23-16-27-27-image.png" srcset="/shinyruotechtips/img/loading.gif" lazyload></p>
+<p>这三个维度分别是：</p>
 <ul>
-<li>QR（Response）：查询请求&#x2F;响应的标志信息。查询请求时，值为 0；响应时，值为 1。</li>
-<li>Opcode：操作码。其中，0 表示标准查询；1 表示反向查询；2 表示服务器状态请求。</li>
-<li>AA（Authoritative）：授权应答，该字段在响应报文中有效。值为 1 时，表示名称服务器是权威服务器；值为 0 时，表示不是权威服务器。</li>
-<li>TC（Truncated）：表示是否被截断。值为 1 时，表示响应已超过 512 字节并已被截断，只返回前 512 个字节。</li>
-<li>RD（Recursion Desired）：期望递归。该字段能在一个查询中设置，并在响应中返回。该标志告诉名称服务器必须处理这个查询，这种方式被称为一个递归查询。如果该位为 0，且被请求的名称服务器没有一个授权回答，它将返回一个能解答该查询的其他名称服务器列表。这种方式被称为迭代查询。</li>
-<li>RA（Recursion Available）：可用递归。该字段只出现在响应报文中。当值为 1 时，表示服务器支持递归查询。</li>
-<li>Z：保留字段，在所有的请求和应答报文中，它的值必须为 0。</li>
-<li>rcode（Reply code）：返回码字段，表示响应的差错状态。<ul>
-<li>当值为 0 时，表示没有错误；</li>
-<li>当值为 1 时，表示报文格式错误（Format error），服务器不能理解请求的报文；</li>
-<li>当值为 2 时，表示域名服务器失败（Server failure），因为服务器的原因导致没办法处理这个请求；</li>
-<li>当值为 3 时，表示名字错误（Name Error），只有对授权域名解析服务器有意义，指出解析的域名不存在；</li>
-<li>当值为 4 时，表示查询类型不支持（Not Implemented），即域名服务器不支持查询类型；</li>
-<li>当值为 5 时，表示拒绝（Refused），一般是服务器由于设置的策略拒绝给出应答，如服务器不希望对某些请求者给出应答，，或者服务器不希望进行某些操作（比如区域传送zone transfer）；</li>
-<li>6-15 保留值，暂时未使用。</li>
+<li>战略对齐：明确组织的愿景、使命和战略；与团队工作在一起，保持战略上的一致，避免资源上的浪费；保持各团队之间信息通畅，处理好团队之间的依赖关系，让团队一起协作。</li>
+<li>人员管理：确保团队健康，帮助团队成员成长，推动团队的执行。</li>
+<li>软件开发：与生成产品代码直接相关的工作，比如系统设计、编码、代码审查、部署、监控等等。</li>
 </ul>
+<p>虽然这三个维度不足以覆盖各个工程角色中的所有活动（比如行政、招聘），但确实可以很好的用可视化的方式来区分各个工程角色的差别。</p>
+<p>让我们具体看一下各个角色的主要工作职责：</p>
+<h4 id="开发工程师-SE-x2F-SDE-Software-Engineer-x2F-Software-Development-Engineer"><a href="#开发工程师-SE-x2F-SDE-Software-Engineer-x2F-Software-Development-Engineer" class="headerlink" title="开发工程师 SE &#x2F; SDE(Software Engineer &#x2F; Software Development Engineer)"></a>开发工程师 SE &#x2F; SDE(Software Engineer &#x2F; Software Development Engineer)</h4><ul>
+<li>开发工程师主要以技术开发为主</li>
+<li>资深的工程师会参与一些跨团队的协作，以及指导新手工程师</li>
+<li>不会涉及人员管理</li>
+</ul>
+<h4 id="工程经理-EM-x2F-SDM-Engineering-Manager-x2F-Software-Development-Manager"><a href="#工程经理-EM-x2F-SDM-Engineering-Manager-x2F-Software-Development-Manager" class="headerlink" title="工程经理 EM &#x2F; SDM(Engineering Manager &#x2F; Software Development Manager)"></a>工程经理 EM &#x2F; SDM(Engineering Manager &#x2F; Software Development Manager)</h4><ul>
+<li>工程经理则以人员管理为主，要花大量时间在团队建设和帮助员工成长上面</li>
+<li>需要将组织的战略和团队以及团队成员对齐，确保团队做的事情和部门或公司的目标是一致的</li>
+<li>要和产品经理、技术项目经理协作，参与项目管理，设定项目目标，制定项目计划，推动项目进展</li>
+<li>软件开发相关的工作占比极少，通常只是参与技术决策和代码审查，即使参与开发也不应负责关键模块，否则容易成为团队瓶颈</li>
+</ul>
+<h4 id="技术主管-TL-x2F-TLM-Tech-Lead-x2F-Tech-Lead-Manager"><a href="#技术主管-TL-x2F-TLM-Tech-Lead-x2F-Tech-Lead-Manager" class="headerlink" title="技术主管 TL &#x2F; TLM (Tech Lead &#x2F; Tech Lead Manager)"></a>技术主管 TL &#x2F; TLM (Tech Lead &#x2F; Tech Lead Manager)</h4><ul>
+<li>技术主管会直接参与开发，和工程师相比比例要低一些，还要帮助团队做出技术决策</li>
+<li>技术主管有少量的人员管理职责，以技术指导为主，一般不会涉及绩效、人事相关</li>
+<li>技术主管会和产品经理协作推动项目进展，偏项目执行层面</li>
+</ul>
+<h4 id="技术项目经理-TPM-Technical-Program-Manager"><a href="#技术项目经理-TPM-Technical-Program-Manager" class="headerlink" title="技术项目经理 TPM (Technical Program Manager)"></a>技术项目经理 TPM (Technical Program Manager)</h4><ul>
+<li>技术项目经理主要职责是管理推动跨多个团队的大型复杂项目</li>
+<li>通常不涉及人员管理，除非是资深的 TPM 下面还带 TPM</li>
+<li>要花大量时间和 stakeholders（利益相关方）沟通协作，从而推动项目进展</li>
+</ul>
+<h4 id="产品经理-PM-Product-Manager"><a href="#产品经理-PM-Product-Manager" class="headerlink" title="产品经理 PM (Product Manager)"></a>产品经理 PM (Product Manager)</h4><ul>
+<li><p>产品经理需要将组织的战略转化成产品设计</p>
+</li>
+<li><p>产品经理需要花大量时间和 SDE、EM、TPM 一起协作，确保产品设计能被理解和执行</p>
+</li>
+<li><p>产品经理通常不涉及人员管理，除非是资深产品经理或产品总监，有直接下属</p>
+</li>
+<li><p>职责和角色的对应关系</p>
 </li>
 </ul>
-<p><strong>DNS报文问题查询部分</strong><br>每个字段含义如下：</p>
+<p>除了上面说的软件开发、战略对齐和人员管理三种维度，还有一种更简单直接的区分方法是按照职责来划分，将职责划分成：项目管理 (Project Management)、人员管理 (People Management) 和技术 (Technical Leadership) 三部分。</p>
 <ul>
-<li>查询名（Name）：一般为要查询的域名胡总和邮件服务器，有时也会是 IP 地址，用于反向查询。</li>
-<li>查询类型（Type）：DNS 查询请求的资源类型。通常查询类型为 A （Address的缩写）类型，表示由域名获取对应的 IP4 地址。（更多类型如 AAAA，CANME，SOA，PTR，NS 等）</li>
-<li>查询类（Class）：地址类型，在设计DNS方案的时候，DNS在除了互联网之外的其他网络中的情况也被考虑到了，所以Class用来识别网络类型，不过，如今除了互联网没有其他的网络了，所以该值为IN。<br>那么，对于上面报文内容，翻译过后的意思就是，“该报文为标准查询(Opcode&#x3D;0)请求(QR&#x3D;1)报文，向本地域名服务器请求查询，发起请求内容为’获取<a target="_blank" rel="noopener" href="http://www.biying.com'所对应的ipv4地址,期待本地域名服务器递归查询(rd=1)请求./">www.biying.com&#39;所对应的IPv4地址，期待本地域名服务器递归查询(RD=1)请求。</a></li>
+<li><strong>工程经理（EM）</strong> 以人员管理为主，但是也会兼顾一部分的技术和项目管理</li>
+<li><strong>技术主管（TL）</strong> 以技术为主，兼顾少量项目管理和人员管理</li>
+<li><strong>项目经理（TPM）</strong> 以项目管理为主，不怎么参与人员管理和技术</li>
 </ul>
-<p><strong>TODO</strong> 配置DNS服务的实例</p>
+<p>以上就是通常北美的大型科技公司在技术公司工程团队中各个角色的介绍，以及区分。</p>
+<h3 id="不同的体量的公司中各个角色分别负责什么？"><a href="#不同的体量的公司中各个角色分别负责什么？" class="headerlink" title="不同的体量的公司中各个角色分别负责什么？"></a>不同的体量的公司中各个角色分别负责什么？</h3><p>不同的公司由于团队规模不一样，所以角色划分也有所不同，上面的划分主要是针对大型科技公司的组织架构来划分的角色，对于中小公司其实没有那么细。比如创业公司老板什么都做，中小型公司没有 TPM（技术项目经理），只有大公司才会有专门的 TPM 去组织管理跨多个团队的项目。</p>
+<p>如果我们把一个项目按照 WWHWW 拆分：</p>
+<ul>
+<li><strong>Why？</strong> 为什么要做？</li>
+<li><strong>What？</strong> 项目的目标是什么？做成什么样？</li>
+<li><strong>How？</strong> 项目要如何完成？技术方案、系统架构是什么？</li>
+<li><strong>When？</strong> 项目何时可以交付？Roadmap 和计划是什么？</li>
+<li><strong>Who？</strong> 安排谁来做这个项目？</li>
+</ul>
+<p>那么通常产品经理（PM）是负责解决 Why 和 What 的，解释清楚为什么要立项，要做成什么样。也就是我们通常说的立项和项目需求。</p>
+<p>在确定需求后，工程经理（EM）就要负责去评估时间（When），安排人手（Who），和团队的工程师一起做出技术方案（How）并推动项目完成。通常 EM 只负责本团队的项目。</p>
+<p>在大公司，一些复杂的项目需要多个团队一起协作，这种情况下单靠 PM 和 EM 是不够的，所以这时候通常会需要技术项目经理（TPM）的帮助，对于跨团队的大项目，TPM 和 PM 以及各个团队的 EM 一起协作，定义好 Roadmap（When），任务分解到各个团队（Who），解决项目中的问题，推动项目的执行。</p>
 
                 
               </div>
@@ -372,7 +369,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/shinyruotechtips/tags/DNS-%E7%BD%91%E7%BB%9C%E6%8A%80%E6%9C%AF/">#-DNS -网络技术</a>
+        <a href="/shinyruotechtips/tags/ReadingList/">#ReadingList</a>
       
     </div>
   
@@ -384,8 +381,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>如何配置一个DNS服务？</div>
-      <div>https://douyushinyruo.github.io/shinyruotechtips/2022/12/1323966e29b7/</div>
+      <div>北美科技公司对工程技术角色的区分</div>
+      <div>https://douyushinyruo.github.io/shinyruotechtips/2024/01/72ac063e860c/</div>
     </div>
     <div class="license-meta">
       
@@ -397,7 +394,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年12月20日</div>
+          <div>2024年1月22日</div>
         </div>
       
       
@@ -429,12 +426,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/shinyruotechtips/2024/01/a9e472a14e25/" title="10分钟搭建Cucumber框架">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">10分钟搭建Cucumber框架</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/shinyruotechtips/2022/12/3ed6afbd27f8/" title="从Docker到OpenShift（二）">
-                        <span class="hidden-mobile">从Docker到OpenShift（二）</span>
+                      <a href="/shinyruotechtips/2024/01/c5d07596ae69/" title="Markdown Syntax Guide">
+                        <span class="hidden-mobile">Markdown Syntax Guide</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -457,7 +460,7 @@
         var options = Object.assign(
           {"clientID":"7289cae2463ede906cd2","clientSecret":"84d68014e41df4e4404ac497ffe3d33cf37722fd","repo":"shinyruotechtips","owner":"DouyuShinyruo","admin":"DouyuShinyruo","language":"zh-CN || en","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '93ff8529d0dc28c998036907bc0d6278'
+            id: 'c10f37ed18d801c9fe2241e9c53e1507'
           }
         )
         var gitalk = new Gitalk(options);
